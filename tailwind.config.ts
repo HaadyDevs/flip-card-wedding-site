@@ -1,3 +1,4 @@
+
 import type { Config } from "tailwindcss";
 
 export default {
@@ -61,6 +62,30 @@ export default {
 					'accent-foreground': 'hsl(var(--sidebar-accent-foreground))',
 					border: 'hsl(var(--sidebar-border))',
 					ring: 'hsl(var(--sidebar-ring))'
+				},
+				ivory: {
+					50: '#fefdf8',
+					100: '#fdfcf0',
+					200: '#faf8e1',
+					300: '#f6f3d2',
+					400: '#f0eab4',
+					500: '#e9e196',
+					600: '#d2cb87',
+					700: '#afa95c',
+					800: '#8c8746',
+					900: '#726f39'
+				},
+				cream: {
+					50: '#fefef9',
+					100: '#fdfdf3',
+					200: '#fafae1',
+					300: '#f7f7cf',
+					400: '#f1f1ab',
+					500: '#ebeb87',
+					600: '#d4d479',
+					700: '#b0b064',
+					800: '#8d8d50',
+					900: '#737341'
 				}
 			},
 			borderRadius: {
@@ -89,8 +114,39 @@ export default {
 			animation: {
 				'accordion-down': 'accordion-down 0.2s ease-out',
 				'accordion-up': 'accordion-up 0.2s ease-out'
+			},
+			perspective: {
+				'1000': '1000px'
+			},
+			transformStyle: {
+				'preserve-3d': 'preserve-3d'
+			},
+			backfaceVisibility: {
+				'hidden': 'hidden'
+			},
+			rotate: {
+				'y-180': 'rotateY(180deg)'
 			}
 		}
 	},
-	plugins: [require("tailwindcss-animate")],
+	plugins: [
+		require("tailwindcss-animate"),
+		function({ addUtilities }) {
+			const newUtilities = {
+				'.perspective-1000': {
+					perspective: '1000px',
+				},
+				'.preserve-3d': {
+					'transform-style': 'preserve-3d',
+				},
+				'.backface-hidden': {
+					'backface-visibility': 'hidden',
+				},
+				'.rotate-y-180': {
+					transform: 'rotateY(180deg)',
+				},
+			}
+			addUtilities(newUtilities)
+		}
+	],
 } satisfies Config;
