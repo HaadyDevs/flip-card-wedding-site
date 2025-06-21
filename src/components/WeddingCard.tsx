@@ -23,8 +23,8 @@ const WeddingCard = () => {
           onClick={handleFlip}
           style={{
             aspectRatio: '3/7',
-            minHeight: '400px',
-            maxHeight: '70vh'
+            minHeight: '500px',
+            maxHeight: '80vh'
           }}
         >
           {/* Front Side */}
@@ -32,7 +32,7 @@ const WeddingCard = () => {
             <img 
               src="/lovable-uploads/c0ecc565-9a87-49af-a90d-6b0e921065c8.png" 
               alt="Wedding Card Front"
-              className="w-full h-full object-cover"
+              className="w-full h-full object-contain"
             />
           </div>
 
@@ -41,7 +41,7 @@ const WeddingCard = () => {
             <img 
               src="/lovable-uploads/664889b9-5ea8-4c46-b4ee-a13d2c621a66.png" 
               alt="Wedding Card Back"
-              className="w-full h-full object-cover"
+              className="w-full h-full object-contain"
             />
           </div>
         </div>
