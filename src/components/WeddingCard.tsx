@@ -15,6 +15,7 @@ const WeddingCard = () => {
   const handleTouchStart = useCallback((e: React.TouchEvent) => {
     startX.current = e.touches[0].clientX;
     isDragging.current = true;
+    e.preventDefault();
   }, []);
 
   const handleTouchEnd = useCallback((e: React.TouchEvent) => {
@@ -29,12 +30,14 @@ const WeddingCard = () => {
     }
     
     isDragging.current = false;
+    e.preventDefault();
   }, []);
 
   // Mouse events for desktop
   const handleMouseDown = useCallback((e: React.MouseEvent) => {
     startX.current = e.clientX;
     isDragging.current = true;
+    e.preventDefault();
   }, []);
 
   const handleMouseUp = useCallback((e: React.MouseEvent) => {
@@ -49,6 +52,12 @@ const WeddingCard = () => {
     }
     
     isDragging.current = false;
+    e.preventDefault();
+  }, []);
+
+  // Prevent context menu on long press
+  const handleContextMenu = useCallback((e: React.MouseEvent) => {
+    e.preventDefault();
   }, []);
 
   return (
@@ -92,6 +101,7 @@ const WeddingCard = () => {
           onTouchEnd={handleTouchEnd}
           onMouseDown={handleMouseDown}
           onMouseUp={handleMouseUp}
+          onContextMenu={handleContextMenu}
         >
           {/* Front Side */}
           <div className="absolute inset-0 backface-hidden bg-white shadow-2xl border border-gray-200 rounded-lg overflow-hidden">
