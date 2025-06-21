@@ -1,13 +1,55 @@
 
-import React, { useState } from 'react';
-import { Heart, RotateCcw } from 'lucide-react';
+import React, { useState, useRef, useCallback } from 'react';
 
 const WeddingCard = () => {
   const [isFlipped, setIsFlipped] = useState(false);
+  const cardRef = useRef<HTMLDivElement>(null);
+  const startX = useRef<number>(0);
+  const isDragging = useRef<boolean>(false);
 
   const handleFlip = () => {
     setIsFlipped(!isFlipped);
   };
+
+  // Touch events for mobile
+  const handleTouchStart = useCallback((e: React.TouchEvent) => {
+    startX.current = e.touches[0].clientX;
+    isDragging.current = true;
+  }, []);
+
+  const handleTouchEnd = useCallback((e: React.TouchEvent) => {
+    if (!isDragging.current) return;
+    
+    const endX = e.changedTouches[0].clientX;
+    const deltaX = endX - startX.current;
+    
+    // Minimum swipe distance to trigger flip
+    if (Math.abs(deltaX) > 50) {
+      handleFlip();
+    }
+    
+    isDragging.current = false;
+  }, []);
+
+  // Mouse events for desktop
+  const handleMouseDown = useCallback((e: React.MouseEvent) => {
+    startX.current = e.clientX;
+    isDragging.current = true;
+  }, []);
+
+  const handleMouseUp = useCallback((e: React.MouseEvent) => {
+    if (!isDragging.current) return;
+    
+    const endX = e.clientX;
+    const deltaX = endX - startX.current;
+    
+    // Minimum swipe distance to trigger flip
+    if (Math.abs(deltaX) > 50) {
+      handleFlip();
+    }
+    
+    isDragging.current = false;
+  }, []);
 
   return (
     <div className="flex flex-col items-center justify-center min-h-screen bg-gradient-to-br from-rose-50 via-white to-pink-50 p-4 md:p-8">
@@ -15,45 +57,42 @@ const WeddingCard = () => {
         <h1 className="text-2xl md:text-4xl font-serif text-gray-800 mb-2">Wedding Card</h1>
       </div>
       
-      <div className="perspective-1000 w-full max-w-xs md:max-w-sm lg:max-w-md relative group">
-        {/* Corner Flip Hint */}
-        <div className="absolute top-3 right-3 z-20 bg-white/80 backdrop-blur-sm rounded-full p-2 shadow-lg opacity-60 group-hover:opacity-100 transition-all duration-300 animate-pulse hover:animate-none">
-          <RotateCcw className="w-4 h-4 text-rose-600" />
+      <div className="perspective-1000 w-full max-w-xs md:max-w-sm lg:max-w-md relative">
+        {/* Curving Arrow with "flip me" text */}
+        <div className="absolute -top-6 -right-8 z-20 flex items-center gap-2">
+          <span className="text-rose-600 font-serif text-sm italic">flip me</span>
+          <svg 
+            width="40" 
+            height="30" 
+            viewBox="0 0 40 30" 
+            className="text-rose-600"
+          >
+            <path
+              d="M5 5 Q20 -5 35 5 L30 0 M35 5 L30 10"
+              stroke="currentColor"
+              strokeWidth="2"
+              fill="none"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+            />
+          </svg>
         </div>
 
-        {/* Sparkle Effects */}
-        <div className="absolute -top-2 -left-2 w-3 h-3 bg-rose-300 rounded-full opacity-60 animate-ping"></div>
-        <div className="absolute -bottom-2 -right-2 w-2 h-2 bg-pink-300 rounded-full opacity-60 animate-ping animation-delay-500"></div>
-
         <div
-          className={`relative preserve-3d transition-transform duration-700 cursor-pointer w-full ${
+          ref={cardRef}
+          className={`relative preserve-3d transition-transform duration-700 cursor-grab active:cursor-grabbing w-full ${
             isFlipped ? 'rotate-y-180' : ''
           }`}
-          onClick={handleFlip}
           style={{
             aspectRatio: '3/7',
             minHeight: '500px',
             maxHeight: '80vh'
           }}
+          onTouchStart={handleTouchStart}
+          onTouchEnd={handleTouchEnd}
+          onMouseDown={handleMouseDown}
+          onMouseUp={handleMouseUp}
         >
-          {/* Hover Overlay */}
-          <div className="absolute inset-0 z-10 bg-gradient-to-t from-black/20 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 rounded-lg flex items-center justify-center backface-hidden">
-            <div className="bg-white/90 backdrop-blur-sm px-4 py-2 rounded-full shadow-lg flex items-center gap-2 text-rose-800 font-medium text-sm transform translate-y-4 group-hover:translate-y-0 transition-transform duration-300">
-              <Heart className="w-4 h-4 fill-rose-200" />
-              <span>Tap to flip</span>
-              <RotateCcw className="w-4 h-4" />
-            </div>
-          </div>
-
-          {/* Back Side Hover Overlay */}
-          <div className="absolute inset-0 z-10 bg-gradient-to-t from-black/20 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 rounded-lg flex items-center justify-center rotate-y-180 backface-hidden">
-            <div className="bg-white/90 backdrop-blur-sm px-4 py-2 rounded-full shadow-lg flex items-center gap-2 text-rose-800 font-medium text-sm transform translate-y-4 group-hover:translate-y-0 transition-transform duration-300">
-              <Heart className="w-4 h-4 fill-rose-200" />
-              <span>Tap to flip</span>
-              <RotateCcw className="w-4 h-4" />
-            </div>
-          </div>
-
           {/* Front Side */}
           <div className="absolute inset-0 backface-hidden bg-white shadow-2xl border border-gray-200 rounded-lg overflow-hidden">
             <img 
@@ -74,10 +113,10 @@ const WeddingCard = () => {
         </div>
       </div>
 
-      {/* Subtle instruction text */}
+      {/* Simple instruction text */}
       <div className="mt-6 text-center">
         <p className="text-xs text-gray-400 font-light">
-          Hover or tap the card to reveal the magic ✨
+          Swipe left or right to flip the card ✨
         </p>
       </div>
     </div>
