@@ -1,8 +1,8 @@
 
-import Envelope from '../components/Envelope';
+import WeddingCard from '../components/WeddingCard';
 
 const Index = () => {
-  return <Envelope />;
+  return <WeddingCard />;
 };
 
 export default Index;
