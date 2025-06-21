@@ -1,4 +1,3 @@
-
 import React, { useState, useRef, useCallback, useEffect } from "react";
 
 const WeddingCard = () => {
@@ -61,7 +60,7 @@ const WeddingCard = () => {
   }, []);
 
   return (
-    <div className="flex flex-col items-center justify-center min-h-screen bg-gradient-to-br from-rose-50 via-white to-pink-50 p-4 md:p-8">
+    <div className="flex flex-col items-center justify-center">
       <div className="mb-4 md:mb-8 text-center">
         <h1 className="text-2xl md:text-4xl font-serif text-gray-800 mb-2">
           Wedding Card
