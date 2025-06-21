@@ -15,7 +15,7 @@ const WeddingCard = () => {
         <p className="text-sm md:text-base text-gray-600">Click the card to flip between sides</p>
       </div>
       
-      <div className="perspective-1000 w-full max-w-sm md:max-w-md lg:max-w-lg">
+      <div className="perspective-1000 w-full max-w-xs md:max-w-sm lg:max-w-md">
         <div
           className={`relative preserve-3d transition-transform duration-700 cursor-pointer w-full ${
             isFlipped ? 'rotate-y-180' : ''
