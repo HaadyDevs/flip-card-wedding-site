@@ -29,24 +29,20 @@ const WeddingCard = () => {
         >
           {/* Front Side */}
           <div className="absolute inset-0 backface-hidden bg-white shadow-2xl border border-gray-200">
-            <div className="w-full h-full flex items-center justify-center bg-gray-100">
-              <div className="text-center text-gray-500">
-                <div className="text-4xl md:text-6xl mb-4">📷</div>
-                <p className="text-sm md:text-base font-medium">Front Image Placeholder</p>
-                <p className="text-xs md:text-sm mt-2 opacity-70">Replace with your wedding photo</p>
-              </div>
-            </div>
+            <img 
+              src="/lovable-uploads/c0ecc565-9a87-49af-a90d-6b0e921065c8.png" 
+              alt="Wedding Card Front"
+              className="w-full h-full object-cover"
+            />
           </div>
 
           {/* Back Side */}
           <div className="absolute inset-0 backface-hidden rotate-y-180 bg-white shadow-2xl border border-gray-200">
-            <div className="w-full h-full flex items-center justify-center bg-gray-100">
-              <div className="text-center text-gray-500">
-                <div className="text-4xl md:text-6xl mb-4">📷</div>
-                <p className="text-sm md:text-base font-medium">Back Image Placeholder</p>
-                <p className="text-xs md:text-sm mt-2 opacity-70">Replace with your wedding details</p>
-              </div>
-            </div>
+            <img 
+              src="/lovable-uploads/664889b9-5ea8-4c46-b4ee-a13d2c621a66.png" 
+              alt="Wedding Card Back"
+              className="w-full h-full object-cover"
+            />
           </div>
         </div>
       </div>
