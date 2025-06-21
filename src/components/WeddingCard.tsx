@@ -1,10 +1,24 @@
-import React, { useState, useRef, useCallback } from "react";
+
+import React, { useState, useRef, useCallback, useEffect } from "react";
 
 const WeddingCard = () => {
   const [isFlipped, setIsFlipped] = useState(false);
+  const [isMobile, setIsMobile] = useState(false);
   const cardRef = useRef<HTMLDivElement>(null);
   const startX = useRef<number>(0);
   const isDragging = useRef<boolean>(false);
+
+  // Detect if device is mobile
+  useEffect(() => {
+    const checkIsMobile = () => {
+      setIsMobile(window.innerWidth <= 768 || 'ontouchstart' in window);
+    };
+    
+    checkIsMobile();
+    window.addEventListener('resize', checkIsMobile);
+    
+    return () => window.removeEventListener('resize', checkIsMobile);
+  }, []);
 
   const handleFlip = useCallback(() => {
     setIsFlipped((prev) => !prev);
@@ -12,13 +26,14 @@ const WeddingCard = () => {
 
   // Touch events for mobile
   const handleTouchStart = useCallback((e: React.TouchEvent) => {
+    if (!isMobile) return;
     startX.current = e.touches[0].clientX;
     isDragging.current = true;
-  }, []);
+  }, [isMobile]);
 
   const handleTouchEnd = useCallback(
     (e: React.TouchEvent) => {
-      if (!isDragging.current) return;
+      if (!isMobile || !isDragging.current) return;
 
       const endX = e.changedTouches[0].clientX;
       const deltaX = endX - startX.current;
@@ -30,31 +45,15 @@ const WeddingCard = () => {
 
       isDragging.current = false;
     },
-    [handleFlip]
+    [handleFlip, isMobile]
   );
 
-  // Mouse events for desktop
-  const handleMouseDown = useCallback((e: React.MouseEvent) => {
-    startX.current = e.clientX;
-    isDragging.current = true;
-  }, []);
-
-  const handleMouseUp = useCallback(
-    (e: React.MouseEvent) => {
-      if (!isDragging.current) return;
-
-      const endX = e.clientX;
-      const deltaX = endX - startX.current;
-
-      // Minimum swipe distance to trigger flip
-      if (Math.abs(deltaX) > 50) {
-        handleFlip();
-      }
-
-      isDragging.current = false;
-    },
-    [handleFlip]
-  );
+  // Click event for desktop
+  const handleClick = useCallback(() => {
+    if (!isMobile) {
+      handleFlip();
+    }
+  }, [handleFlip, isMobile]);
 
   // Prevent context menu on long press
   const handleContextMenu = useCallback((e: React.MouseEvent) => {
@@ -94,9 +93,9 @@ const WeddingCard = () => {
 
         <div
           ref={cardRef}
-          className={`relative preserve-3d transition-transform duration-700 cursor-grab active:cursor-grabbing w-full ${
+          className={`relative preserve-3d transition-transform duration-700 w-full ${
             isFlipped ? "rotate-y-180" : ""
-          }`}
+          } ${isMobile ? "cursor-default" : "cursor-pointer"}`}
           style={{
             aspectRatio: "3/7",
             minHeight: "500px",
@@ -104,10 +103,8 @@ const WeddingCard = () => {
           }}
           onTouchStart={handleTouchStart}
           onTouchEnd={handleTouchEnd}
-          onMouseDown={handleMouseDown}
-          onMouseUp={handleMouseUp}
+          onClick={handleClick}
           onContextMenu={handleContextMenu}
-          onClick={handleFlip}
         >
           {/* Front Side */}
           <div className="absolute inset-0 backface-hidden bg-white shadow-2xl border border-gray-200 rounded-lg overflow-hidden">
@@ -129,10 +126,10 @@ const WeddingCard = () => {
         </div>
       </div>
 
-      {/* Simple instruction text */}
+      {/* Updated instruction text */}
       <div className="mt-6 text-center">
         <p className="text-xs text-gray-400 font-light">
-          Swipe left or right, or click to flip the card ✨
+          {isMobile ? "Swipe left or right to flip the card ✨" : "Click to flip the card ✨"}
         </p>
       </div>
     </div>
